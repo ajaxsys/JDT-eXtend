@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+
+   <extension
+         point="org.eclipse.ui.actionSets">
+      <actionSet
+            label="JDT eXtend Action Set"
+            visible="true"
+            id="JDTeXtend.actionSet">
+
+         <menu
+               label="JDT_&amp;eXtend"
+               id="JDTExtendMenu">
+            <separator
+                  name="callHierarchyGroup">
+            </separator>
+            <separator
+                  name="qualifiedNameGroup">
+            </separator>
+         </menu>
+         <!-- Menu -->
+         <action
+               label="Get &amp;Qualified name"
+               icon="icons/qn.png"
+               class="com.github.ajaxsys.jdtx.actions.SearchMethods"
+               menubarPath="JDTExtendMenu/qualifiedNameGroup"
+               id="com.github.ajaxsys.jdtx.actions.SearchMethods">
+         </action>
+         <action
+               label="&amp;Get Call Hierrarchy"
+               icon="icons/ch.png"
+               class="com.github.ajaxsys.jdtx.actions.FindMethodCallers"
+               menubarPath="JDTExtendMenu/callHierarchyGroup"
+               id="com.github.ajaxsys.jdtx.actions.FindMethodCallers">
+         </action>
+         <action
+               label="&amp;Check Call Hierrarchy"
+               icon="icons/ch2.png"
+               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursive"
+               menubarPath="JDTExtendMenu/callHierarchyGroup"
+               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursive">
+         </action>
+         <!-- Toolbar
+         <action
+               label="&amp;呼出階層参照"
+               icon="icons/ch.png"
+               class="com.github.ajaxsys.jdtx.actions.FindMethodCallers"
+               tooltip="Find all callers of a method – get all methods that call a particular method "
+               toolbarPath="sampleGroup4"
+               id="com.github.ajaxsys.jdtx.actions.FindMethodCallers">
+         </action>-->
+
+      </actionSet>
+   </extension>
+
+</plugin>

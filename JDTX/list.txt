@@ -1,0 +1,5 @@
+myjdtplugin.actions.FindMethodCallers.dispose()
+myjdtplugin.actions.FindMethodCallers.init(IWorkbenchWindow)
+myjdtplugin.actions.FindMethodCallers.run(IAction)
+myjdtplugin.actions.FindMethodCallers.runCH()
+myjdtplugin.utils.UFile.getText(String)
