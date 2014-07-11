@@ -21,25 +21,32 @@
          </menu>
          <!-- Menu -->
          <action
-               label="Get &amp;Qualified name"
-               icon="icons/qn.png"
-               class="com.github.ajaxsys.jdtx.actions.SearchMethods"
-               menubarPath="JDTExtendMenu/qualifiedNameGroup"
-               id="com.github.ajaxsys.jdtx.actions.SearchMethods">
-         </action>
-         <action
-               label="&amp;Get Call Hierrarchy"
-               icon="icons/ch.png"
-               class="com.github.ajaxsys.jdtx.actions.FindMethodCallers"
-               menubarPath="JDTExtendMenu/callHierarchyGroup"
-               id="com.github.ajaxsys.jdtx.actions.FindMethodCallers">
-         </action>
-         <action
                label="&amp;Check Call Hierrarchy"
                icon="icons/ch2.png"
                class="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursive"
                menubarPath="JDTExtendMenu/callHierarchyGroup"
                id="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursive">
+         </action>
+         <action
+               label="&amp;Get Call Hierrarchy Multi Thread"
+               icon="icons/chs.png"
+               class="com.github.ajaxsys.jdtx.actions.FindMethodCallers"
+               menubarPath="JDTExtendMenu/callHierarchyGroup"
+               id="com.github.ajaxsys.jdtx.actions.FindMethodCallers">
+         </action>
+         <action
+               label="&amp;Get Call Hierrarchy Single Thread"
+               icon="icons/ch.png"
+               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThread"
+               menubarPath="JDTExtendMenu/callHierarchyGroup"
+               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThread">
+         </action>
+         <action
+               label="Get &amp;Qualified name"
+               icon="icons/qn.png"
+               class="com.github.ajaxsys.jdtx.actions.SearchMethods"
+               menubarPath="JDTExtendMenu/qualifiedNameGroup"
+               id="com.github.ajaxsys.jdtx.actions.SearchMethods">
          </action>
          <!-- Toolbar
          <action

@@ -6,6 +6,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
+import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.ui.IWorkbenchWindow;
@@ -44,9 +48,9 @@ public class FindMethodCallers implements IWorkbenchWindowActionDelegate {
 	 *
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
-	public void run(IAction action) {
+	public void run(final IAction action) {
 		boolean isContinued = UDialog.showUsage(this, window);
-		if (!isContinued){
+		if (!isContinued) {
 			return;
 		}
 
@@ -70,97 +74,164 @@ public class FindMethodCallers implements IWorkbenchWindowActionDelegate {
 				return;
 			}
 
-			// EXECUTE
-			if (isMultiThread) {
-				runMultiThread(action, inputText);
-			} else {
-				runSingleThread(action, inputText);
-			}
+			final String[] members = inputText.split("\n");
+
+			Job job = new Job("FindMethodCallers Job") {
+				private boolean canceled = false;
+
+				@Override
+				protected void canceling() {
+					System.out.println("Cancel requested.");
+					canceled = true;
+				}
+
+				@Override
+				protected IStatus run(IProgressMonitor monitor) {
+
+					// Set total number of work units
+					monitor.beginTask("Start task ", members.length);
+
+					// EXECUTE
+					if (isMultiThread) {
+						return runMultiThread(action, members, monitor);
+					} else {
+						return runSingleThread(action, members, monitor);
+					}
+				}
+
+				// Single
+				IStatus runSingleThread(IAction action, final String[] members,
+						final IProgressMonitor monitor) {
+					UConsole.log("[[[ Start@Single Thread..... ]]]");
+
+					long start = System.currentTimeMillis();
+
+					for (int i = 0; i < members.length; i++) {
+						int lineNo = i + 1;
+						if (canceled)
+							break;
+
+						final String member = members[i];
+						final String logPrefix = lineNo + SPLITER;
+
+						// Skip blank line
+						if ("".equals(member.trim()))
+							continue;
+
+						monitor.subTask("Calling " + lineNo + "/"
+								+ members.length);
+
+						new UCaller().callHierachyOfWorkspaceProject(member,
+								logPrefix, isRecursive);
+
+						monitor.worked(getIncreesePercentage(lineNo,
+								members.length));
+
+					}
+					endLog(start);
+
+					return canceled ? Status.CANCEL_STATUS : Status.OK_STATUS;
+				}
+
+				public int getIncreesePercentage(double now, double all) {
+
+//					if (all <= 100) {
+//						// e.g now=6 all=11, percent 11/100 = 0.11 , each 1/0.11
+//						// = 9 percent
+//						return new Double(100 / all).intValue();
+//					} else {
+//						// e.g now=62 all=110, percent 11/100 = 1.1, now_ajuest
+//						// = 62/1.1 = 56.3 ~ 57
+//						Double newBef = Math.floor((now - 1) / (all / 100));
+//						Double newNxt = Math.floor((now) / (all / 100));
+//						if (newNxt.intValue() > newBef.intValue()) {
+//							return 1;
+//						} else {
+//							return 0;
+//						}
+//					}
+					 if (all < now) {
+						 return 3;
+					 } else {
+						 return 0;
+					 }
+				}
+
+				// Multiple
+				IStatus runMultiThread(IAction action, final String[] members,
+						final IProgressMonitor monitor) {
+					UConsole.log("[[[ Start@Multi Thread..... ]]]");
+
+					final long start = System.currentTimeMillis();
+
+					// Keep a processor for OS
+					final ExecutorService exec = Executors
+							.newFixedThreadPool(Runtime.getRuntime()
+									.availableProcessors() - 1);
+
+					// String[] members = inputText.split("\n");
+					for (int i = 0; i < members.length; i++) {
+						final int lineNo = i + 1;
+						if (canceled) {
+							break;
+						}
+
+						final String member = members[i];
+						final String logPrefix = lineNo + SPLITER;
+						// Skip blank line
+						if ("".equals(member.trim()))
+							continue;
+
+						exec.execute(new Runnable() {
+
+							@Override
+							public void run() {
+								if (canceled) {
+									return;
+								}
+								monitor.subTask("Calling " + lineNo + "/"
+										+ members.length);
+
+								new UCaller().callHierachyOfWorkspaceProject(
+										member, logPrefix, isRecursive);
+
+								monitor.worked(getIncreesePercentage(lineNo,
+										members.length));
+							}
+						});
+					}
+
+					// Waiting for ExecutorService end
+					exec.shutdown();
+					try {
+						exec.awaitTermination(Long.MAX_VALUE,
+								TimeUnit.NANOSECONDS);
+					} catch (InterruptedException e) {
+					}
+
+					endLog(start);
+
+					return canceled ? Status.CANCEL_STATUS : Status.OK_STATUS;
+				}
+
+				private void endLog(long start) {
+					UConsole.log("[[[ "
+							+ (canceled ? "Canceled " : "ExcuteTime ")
+							+ +(System.currentTimeMillis() - start) + " ]]]");
+					UConsole.close();
+				}
+			};
+
+			job.schedule();
 
 		} catch (IOException e) {
 			e.printStackTrace();
-			UConsole.log("[FATAL] " + e.getMessage() + " - " + UFile.getJDTExtendHome("list.txt OR result.txt"));
-		}  catch (Exception e) {
+			UConsole.log("[FATAL] " + e.getMessage() + " - "
+					+ UFile.getJDTExtendHome("list.txt OR result.txt"));
+		} catch (Exception e) {
 			e.printStackTrace();
 			UConsole.log("[FATAL]" + e.getMessage());
 		}
-	}
-
-	void runSingleThread(IAction action, String inputText) {
-		UConsole.log("[[[ Start@Single Thread..... ]]]");
-
-		final String[] members = inputText.split("\n");
-
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				long start = System.currentTimeMillis();
-				for (int i = 0; i < members.length; i++) {
-					final String member = members[i];
-					final String logPrefix = (i + 1) + SPLITER;
-
-					// Skip blank line
-					if ("".equals(member.trim()))
-						continue;
-
-					new UCaller().callHierachyOfWorkspaceProject(member,
-							logPrefix, isRecursive);
-
-				}
-				UConsole.log("[[[ ExcuteTime "
-						+ (System.currentTimeMillis() - start) + " ]]]");
-				UConsole.close();
-			}
-
-		}).start();
-
-	}
-
-	void runMultiThread(IAction action, String inputText) {
-		UConsole.log("[[[ Start@Multi Thread..... ]]]");
-
-		final long start = System.currentTimeMillis();
-
-		// Keep a processor for OS
-		final ExecutorService exec = Executors.newFixedThreadPool(Runtime
-				.getRuntime().availableProcessors() - 1);
-
-		String[] members = inputText.split("\n");
-		for (int i = 0; i < members.length; i++) {
-			final String member = members[i];
-			final String logPrefix = (i + 1) + SPLITER;
-			// Skip blank line
-			if ("".equals(member.trim()))
-				continue;
-
-			exec.execute(new Runnable() {
-				@Override
-				public void run() {
-					new UCaller().callHierachyOfWorkspaceProject(member,
-							logPrefix, isRecursive);
-				}
-			});
-		}
-
-		// Not block the UI Thread
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				// Waiting for ExecutorService end
-				exec.shutdown();
-				try {
-					exec.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-				} catch (InterruptedException e) {
-				}
-
-				// System.out.println("[[[ ExcuteTime " +
-				// (System.currentTimeMillis() -
-				// start) + " ]]]");
-				UConsole.log("[[[ ExcuteTime "
-						+ (System.currentTimeMillis() - start) + " ]]]");
-				UConsole.close();
-			}
-		}).start();
 	}
 
 	public void runSample() {
