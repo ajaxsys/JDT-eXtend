@@ -190,19 +190,25 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 			IgnoreCaseArrayList hitClazz) {
 		// Not existed class:
 		UConsole.log("\n\n\n"
-				+ "================== Summary =====================");
+				+ "================== Summary Begin =====================");
 		UConsole.log("==================       All:" + targetClazz.size());
 		UConsole.log("==================       Hit:" + hitClazz.size());
-		UConsole.log("==================          * Include Same Class Name in different package, or in duplicated JARs");
-		UConsole.log("\n\n\n"
-				+ "================== Not Exist LIST Line NUM =====================");
+		UConsole.log("================== Summary End =====================\n\n\n");
+		if (hitClazz.size() != targetClazz.size()){
+			printSummaryDiff(targetClazz, hitClazz);
+		}
+	}
+
+	public void printSummaryDiff(IgnoreCaseArrayList targetClazz,
+			IgnoreCaseArrayList hitClazz) {
+		UConsole.log("================== Not Exist LIST Begin=====================");
 		for (int j = 0; j < targetClazz.size(); j++) {
 			String classToCheck = targetClazz.get(j);
 			if (!hitClazz.contains(classToCheck)) {
 				UConsole.log((j + 1) + "\t" + classToCheck);
 			}
 		}
-		UConsole.log("================== Not Exist:"
+		UConsole.log("================== Not Exist Num:"
 				+ (targetClazz.size() - hitClazz.size()));
 		UConsole.log("================== Not Exist LIST End =====================");
 	}
