@@ -150,8 +150,8 @@ public class FindMethodCallers implements IWorkbenchWindowActionDelegate {
 //							return 0;
 //						}
 //					}
-					 if (all < now) {
-						 return 3;
+					 if (all > now) {
+						 return 1;
 					 } else {
 						 return 0;
 					 }
