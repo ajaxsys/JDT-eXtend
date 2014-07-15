@@ -56,7 +56,7 @@ public class UDialog {
 						.append("\n")
 						.append("- INPUT: input2.txt \n(Path ")
 						.append(UFile.getJDTExtendHome("input2.txt"))
-						.append(")\n: method regexp, e.g: `update*`\n")
+						.append(")\n: method regexp, e.g: `update.*`\n")
 						.append("\n")
 						.append("- INPUT: input3.txt [optional] \n(Path ")
 						.append(UFile.getJDTExtendHome("input3.txt"))
