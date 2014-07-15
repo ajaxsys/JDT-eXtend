@@ -21,21 +21,21 @@
          </menu>
          <!-- Menu -->
          <action
-               label="&amp;Check Call Hierrarchy"
+               label="&amp;Check Call Hierarchy"
                icon="icons/ch2.png"
                class="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursive"
                menubarPath="JDTExtendMenu/callHierarchyGroup"
                id="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursive">
          </action>
          <action
-               label="&amp;Get Call Hierrarchy Multi Thread"
+               label="&amp;Get Call Hierarchy Multi Thread"
                icon="icons/chs.png"
                class="com.github.ajaxsys.jdtx.actions.FindMethodCallers"
                menubarPath="JDTExtendMenu/callHierarchyGroup"
                id="com.github.ajaxsys.jdtx.actions.FindMethodCallers">
          </action>
          <action
-               label="&amp;Get Call Hierrarchy Single Thread"
+               label="&amp;Get Call Hierarchy Single Thread"
                icon="icons/ch.png"
                class="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThread"
                menubarPath="JDTExtendMenu/callHierarchyGroup"
