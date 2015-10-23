@@ -30,6 +30,7 @@ public class UConsole {
 			if (result.exists()){
 				result.delete();
 			}
+			result.getParentFile().mkdirs();
 			result.createNewFile();
 			if (result.exists()){
 				out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, true)));
