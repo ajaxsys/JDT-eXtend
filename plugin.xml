@@ -5,71 +5,24 @@
    <extension
          point="org.eclipse.ui.actionSets">
       <actionSet
-            label="JDT eXtend Action Set"
+            label="CallCheck Action Set"
             visible="true"
             id="JDTeXtend.actionSet">
 
          <menu
-               label="JDT_&amp;eXtend"
-               id="JDTExtendMenu">
+               label="CallCheck"
+               id="CallCheck">
             <separator
                   name="checkGroup">
-            </separator>
-            <separator
-                  name="callGroup">
-            </separator>
-            <separator
-                  name="qualifiedNameGroup">
             </separator>
          </menu>
          <!-- Menu -->
          <action
                label="&amp;Check Call Hierrarchy"
-               icon="icons/ch2.png"
-               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursive"
-               menubarPath="JDTExtendMenu/checkGroup"
-               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursive">
+               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThreadNoRecursiveFromTextInput"
+               menubarPath="CallCheck/checkGroup"
+               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThreadNoRecursiveFromTextInput">
          </action>
-         <action
-               label="&amp;Check Call Hierrarchy TextBox"
-               icon="icons/ch2.png"
-               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursiveFromTextInput"
-               menubarPath="JDTExtendMenu/checkGroup"
-               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursiveFromTextInput">
-         </action>
-
-         <action
-               label="&amp;Get Call Hierrarchy"
-               icon="icons/ch.png"
-               class="com.github.ajaxsys.jdtx.actions.FindMethodCallers"
-               menubarPath="JDTExtendMenu/callGroup"
-               id="com.github.ajaxsys.jdtx.actions.FindMethodCallers">
-         </action>
-         <action
-               label="Get Call Hierarchy TextBox"
-               icon="icons/ch2.png"
-               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersFromTextInput"
-               menubarPath="JDTExtendMenu/callGroup"
-               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersFromTextInput">
-         </action>
-
-         <!-- seperate -->
-          <action
-               label="Get &amp;Qualified name"
-               icon="icons/qn.png"
-               class="com.github.ajaxsys.jdtx.actions.SearchMethods"
-               menubarPath="JDTExtendMenu/qualifiedNameGroup"
-               id="com.github.ajaxsys.jdtx.actions.SearchMethods">
-         </action>
-         <!-- Toolbar
-         <action
-               label="&amp;呼出階層参照"
-               icon="icons/ch.png"
-               class="com.github.ajaxsys.jdtx.actions.FindMethodCallers"
-               tooltip="Find all callers of a method – get all methods that call a particular method "
-               toolbarPath="sampleGroup4"
-               id="com.github.ajaxsys.jdtx.actions.FindMethodCallers">
-         </action>-->
 
       </actionSet>
    </extension>

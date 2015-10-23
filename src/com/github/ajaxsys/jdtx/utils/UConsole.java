@@ -13,7 +13,7 @@ import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.console.MessageConsoleStream;
 
 public class UConsole {
-	static MessageConsole console = new MessageConsole("MyJDTConsole", null);
+	static MessageConsole console = new MessageConsole("Call Check Result", null);
 
 	static PrintWriter out;
 
@@ -30,6 +30,7 @@ public class UConsole {
 			if (result.exists()){
 				result.delete();
 			}
+			result.getParentFile().mkdirs();
 			result.createNewFile();
 			if (result.exists()){
 				out = new PrintWriter(new BufferedWriter(new FileWriter(filePath, true)));

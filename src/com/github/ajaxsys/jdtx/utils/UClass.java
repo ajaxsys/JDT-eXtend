@@ -18,9 +18,6 @@ public class UClass {
 	private UClass() {
 	}
 
-	private UClass(String a) {
-	}
-
 	/**
 	 * Guess a IMember instance from qualified name<br>
 	 * * IMember is the parent of IType, IMethod, IField<br>

@@ -45,7 +45,7 @@ public class UFile {
 
 	public static String getJDTExtendHome() {
 		return new StringBuilder().append(getUserHome())
-				.append("JDTX").append(File.separator).toString();
+				.append("CallCheck").append(File.separator).toString();
 	}
 
 	public static String getJDTExtendHome(String path) {

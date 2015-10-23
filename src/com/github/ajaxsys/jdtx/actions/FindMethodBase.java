@@ -15,7 +15,6 @@ import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 import com.github.ajaxsys.jdtx.dialog.QualifiedNameDialog;
 import com.github.ajaxsys.jdtx.utils.UCaller;
 import com.github.ajaxsys.jdtx.utils.UConsole;
-import com.github.ajaxsys.jdtx.utils.UDialog;
 import com.github.ajaxsys.jdtx.utils.UFile;
 
 /**
@@ -37,11 +36,6 @@ abstract class FindMethodBase implements IWorkbenchWindowActionDelegate {
 	abstract String getText() throws Exception;
 
 	String getTextFromFile() throws FileNotFoundException {
-	    boolean isContinued = UDialog.showUsage(this, window);
-        if (!isContinued){
-            return null;
-        }
-
 	    String inPath = UFile.getJDTExtendHome("list.txt");
 	    return UFile.getText(inPath);
 	}
@@ -72,19 +66,10 @@ abstract class FindMethodBase implements IWorkbenchWindowActionDelegate {
 
 			String inputText = null;
 			try {
-				// * Input sample of list.txt:
-				// myjdtplugin.utils.UCaller.equals(String[], String[])
-				// myjdtplugin.utils.UCaller.getCallersOf(IMember)
-				// myjdtplugin.utils.UCaller.TAB
-				// myjdtplugin.utils.UCaller
-				// myjdtplugin.utils.UClass.UClass()
-				// myjdtplugin.utils.UCaller.NOT_EXIST
 				inputText = getText();
-
 				if (inputText == null) {
 				    return;
 				}
-
 			} catch (FileNotFoundException e) {
 				System.out.println("[ERROR] File read NG: " + e.getMessage());
 				return;
