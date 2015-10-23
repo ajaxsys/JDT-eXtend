@@ -66,7 +66,10 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
 	public void run(IAction action) {
-		UDialog.showUsage(this, window);
+        boolean isContinued = UDialog.showUsage(this, window);
+        if (!isContinued){
+            return;
+        }
 
 		final IWorkspaceRoot root = ResourcesPlugin.getWorkspace().getRoot();
 		new Thread(new Runnable() {
@@ -190,25 +193,19 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 			IgnoreCaseArrayList hitClazz) {
 		// Not existed class:
 		UConsole.log("\n\n\n"
-				+ "================== Summary Begin =====================");
+				+ "================== Summary =====================");
 		UConsole.log("==================       All:" + targetClazz.size());
 		UConsole.log("==================       Hit:" + hitClazz.size());
-		UConsole.log("================== Summary End =====================\n\n\n");
-		if (hitClazz.size() != targetClazz.size()){
-			printSummaryDiff(targetClazz, hitClazz);
-		}
-	}
-
-	public void printSummaryDiff(IgnoreCaseArrayList targetClazz,
-			IgnoreCaseArrayList hitClazz) {
-		UConsole.log("================== Not Exist LIST Begin=====================");
+		UConsole.log("==================          * Include Same Class Name in different package, or in duplicated JARs");
+		UConsole.log("\n\n\n"
+				+ "================== Not Exist LIST Line NUM =====================");
 		for (int j = 0; j < targetClazz.size(); j++) {
 			String classToCheck = targetClazz.get(j);
 			if (!hitClazz.contains(classToCheck)) {
 				UConsole.log((j + 1) + "\t" + classToCheck);
 			}
 		}
-		UConsole.log("================== Not Exist Num:"
+		UConsole.log("================== Not Exist:"
 				+ (targetClazz.size() - hitClazz.size()));
 		UConsole.log("================== Not Exist LIST End =====================");
 	}

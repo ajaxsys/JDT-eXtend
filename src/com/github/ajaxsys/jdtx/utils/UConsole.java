@@ -48,9 +48,17 @@ public class UConsole {
 	public static synchronized void log(String message) {
 		MessageConsoleStream stream = console.newMessageStream();
 		stream.println(message);
+
 		if (out != null){
 			out.println(message);
 			out.flush();
+		}
+
+		try {
+		    stream.flush();
+		    stream.close();
+		} catch (IOException e) {
+		    e.printStackTrace();
 		}
 	}
 }

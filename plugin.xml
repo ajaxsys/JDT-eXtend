@@ -13,7 +13,10 @@
                label="JDT_&amp;eXtend"
                id="JDTExtendMenu">
             <separator
-                  name="callHierarchyGroup">
+                  name="checkGroup">
+            </separator>
+            <separator
+                  name="callGroup">
             </separator>
             <separator
                   name="qualifiedNameGroup">
@@ -21,27 +24,37 @@
          </menu>
          <!-- Menu -->
          <action
-               label="&amp;Check Call Hierarchy"
+               label="&amp;Check Call Hierrarchy"
                icon="icons/ch2.png"
                class="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursive"
-               menubarPath="JDTExtendMenu/callHierarchyGroup"
+               menubarPath="JDTExtendMenu/checkGroup"
                id="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursive">
          </action>
          <action
-               label="&amp;Get Call Hierarchy Multi Thread"
-               icon="icons/chs.png"
+               label="&amp;Check Call Hierrarchy TextBox"
+               icon="icons/ch2.png"
+               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursiveFromTextInput"
+               menubarPath="JDTExtendMenu/checkGroup"
+               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursiveFromTextInput">
+         </action>
+
+         <action
+               label="&amp;Get Call Hierrarchy"
+               icon="icons/ch.png"
                class="com.github.ajaxsys.jdtx.actions.FindMethodCallers"
-               menubarPath="JDTExtendMenu/callHierarchyGroup"
+               menubarPath="JDTExtendMenu/callGroup"
                id="com.github.ajaxsys.jdtx.actions.FindMethodCallers">
          </action>
          <action
-               label="&amp;Get Call Hierarchy Single Thread"
-               icon="icons/ch.png"
-               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThread"
-               menubarPath="JDTExtendMenu/callHierarchyGroup"
-               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThread">
+               label="Get Call Hierarchy TextBox"
+               icon="icons/ch2.png"
+               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersFromTextInput"
+               menubarPath="JDTExtendMenu/callGroup"
+               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersFromTextInput">
          </action>
-         <action
+
+         <!-- seperate -->
+          <action
                label="Get &amp;Qualified name"
                icon="icons/qn.png"
                class="com.github.ajaxsys.jdtx.actions.SearchMethods"
