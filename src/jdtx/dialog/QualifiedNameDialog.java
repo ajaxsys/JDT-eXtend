@@ -1,4 +1,4 @@
-package com.github.ajaxsys.jdtx.dialog;
+package jdtx.dialog;
 
 
 import org.eclipse.jface.dialogs.IMessageProvider;

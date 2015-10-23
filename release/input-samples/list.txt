@@ -1,5 +1,0 @@
-com.github.ajaxsys.jdtx.actions.FindMethodCallers.dispose()
-com.github.ajaxsys.jdtx.actions.FindMethodCallers.init(IWorkbenchWindow)
-com.github.ajaxsys.jdtx.actions.FindMethodCallers.run(IAction)
-com.github.ajaxsys.jdtx.actions.FindMethodCallers.runCH()
-com.github.ajaxsys.jdtx.utils.UFile.getText(String)

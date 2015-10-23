@@ -1,4 +1,4 @@
-package com.github.ajaxsys.jdtx.utils;
+package jdtx.utils;
 
 import java.io.File;
 import java.io.FileNotFoundException;

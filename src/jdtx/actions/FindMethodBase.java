@@ -1,4 +1,4 @@
-package com.github.ajaxsys.jdtx.actions;
+package jdtx.actions;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -6,16 +6,16 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+import jdtx.dialog.QualifiedNameDialog;
+import jdtx.utils.UCaller;
+import jdtx.utils.UConsole;
+import jdtx.utils.UFile;
+
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.window.Window;
 import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
-
-import com.github.ajaxsys.jdtx.dialog.QualifiedNameDialog;
-import com.github.ajaxsys.jdtx.utils.UCaller;
-import com.github.ajaxsys.jdtx.utils.UConsole;
-import com.github.ajaxsys.jdtx.utils.UFile;
 
 /**
  * Our sample action implements workbench action delegate. The action proxy will

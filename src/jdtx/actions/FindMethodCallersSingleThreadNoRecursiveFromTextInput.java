@@ -1,4 +1,4 @@
-package com.github.ajaxsys.jdtx.actions;
+package jdtx.actions;
 
 /**
  * Recursive but Single Thread Action.

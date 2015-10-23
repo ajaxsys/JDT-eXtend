@@ -1,4 +1,4 @@
-package com.github.ajaxsys.jdtx.utils;
+package jdtx.utils;
 
 import java.util.ArrayList;
 import java.util.HashSet;

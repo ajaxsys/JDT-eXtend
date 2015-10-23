@@ -7,7 +7,7 @@
       <actionSet
             label="CallCheck Action Set"
             visible="true"
-            id="JDTeXtend.actionSet">
+            id="CallCheck.actionSet">
 
          <menu
                label="CallCheck"
@@ -19,9 +19,9 @@
          <!-- Menu -->
          <action
                label="&amp;Check Call Hierrarchy"
-               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThreadNoRecursiveFromTextInput"
+               class="jdtx.actions.FindMethodCallersSingleThreadNoRecursiveFromTextInput"
                menubarPath="CallCheck/checkGroup"
-               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThreadNoRecursiveFromTextInput">
+               id="jdtx.actions.FindMethodCallersSingleThreadNoRecursiveFromTextInput">
          </action>
 
       </actionSet>

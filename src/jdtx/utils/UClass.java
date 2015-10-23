@@ -1,4 +1,4 @@
-package com.github.ajaxsys.jdtx.utils;
+package jdtx.utils;
 
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IWorkspaceRoot;

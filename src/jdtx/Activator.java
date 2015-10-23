@@ -1,4 +1,4 @@
-package com.github.ajaxsys.jdtx;
+package jdtx;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

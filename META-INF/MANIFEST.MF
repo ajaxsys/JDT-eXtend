@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: JDT eXtend
-Bundle-SymbolicName: JDT-eXtend;singleton:=true
-Bundle-Version: 0.1.1
-Bundle-Activator: com.github.ajaxsys.jdtx.Activator
+Bundle-Name: CallCheck
+Bundle-SymbolicName: CallCheck;singleton:=true
+Bundle-Version: 0.1
+Bundle-Activator: jdtx.Activator
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
