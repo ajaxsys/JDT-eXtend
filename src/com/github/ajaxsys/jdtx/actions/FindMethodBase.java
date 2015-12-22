@@ -65,6 +65,7 @@ abstract class FindMethodBase implements IWorkbenchWindowActionDelegate {
 	 *
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
+    @Override
 	public void run(IAction action) {
 
 		try {
@@ -84,6 +85,8 @@ abstract class FindMethodBase implements IWorkbenchWindowActionDelegate {
 				if (inputText == null) {
 				    return;
 				}
+
+				inputText.replaceAll("\r", "");
 
 			} catch (FileNotFoundException e) {
 				System.out.println("[ERROR] File read NG: " + e.getMessage());
@@ -187,11 +190,10 @@ abstract class FindMethodBase implements IWorkbenchWindowActionDelegate {
 		final String clazz = "com.test.example.pkg.MyIF";
 		final String method = "query";
 		try {
-			System.out
-					.println("searchMethodAllIncludeJRE----------------------------------------------------");
+			System.out.println("searchMethodAllIncludeJRE----------------------------------------------------");
 			new UCaller().searchMethodAllIncludeJRE(clazz, method);
-			System.out
-					.println("searchMethodWithWorkspaceProjectOnly----------------------------------------------------");
+
+			System.out.println("searchMethodWithWorkspaceProjectOnly----------------------------------------------------");
 			new UCaller().searchMethodWithWorkspaceProjectOnly(clazz, method);
 
 		} catch (Exception e) {
@@ -206,6 +208,7 @@ abstract class FindMethodBase implements IWorkbenchWindowActionDelegate {
 	 *
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
@@ -215,6 +218,7 @@ abstract class FindMethodBase implements IWorkbenchWindowActionDelegate {
 	 *
 	 * @see IWorkbenchWindowActionDelegate#dispose
 	 */
+	@Override
 	public void dispose() {
 	}
 
@@ -224,6 +228,7 @@ abstract class FindMethodBase implements IWorkbenchWindowActionDelegate {
 	 *
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
+	@Override
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}

@@ -53,11 +53,7 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 	// Dummy source end
 	private IWorkbenchWindow window;
 
-	/**
-	 * The constructor.
-	 */
-	public SearchMethods() {
-	}
+	public SearchMethods() {}
 
 	/**
 	 * The action has been activated. The argument of the method represents the
@@ -65,6 +61,7 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 	 *
 	 * @see IWorkbenchWindowActionDelegate#run
 	 */
+	@Override
 	public void run(IAction action) {
         boolean isContinued = UDialog.showUsage(this, window);
         if (!isContinued){
@@ -96,7 +93,8 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 	private void processRootDirectoryJar(IWorkspaceRoot root)
 			throws JavaModelException, CoreException {
 		// System.out.println("root" + root.getLocation().toOSString());
-		Inputs inputs = new Inputs(UFile.getJDTExtendHome("input1.txt"),
+		Inputs inputs = new Inputs(
+		        UFile.getJDTExtendHome("input1.txt"),
 				UFile.getJDTExtendHome("input2.txt"),
 				UFile.getJDTExtendHome("input3.txt"));
 		IgnoreCaseArrayList targetClazz = inputs.getTargetClazz();
@@ -189,7 +187,7 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 		printSummary(targetClazz, hitClazz);
 	}
 
-	public void printSummary(IgnoreCaseArrayList targetClazz,
+	private void printSummary(IgnoreCaseArrayList targetClazz,
 			IgnoreCaseArrayList hitClazz) {
 		// Not existed class:
 		UConsole.log("\n\n\n"
@@ -210,12 +208,12 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 		UConsole.log("================== Not Exist LIST End =====================");
 	}
 
-	public boolean isValidPackage(IProject project) throws CoreException {
+	private boolean isValidPackage(IProject project) throws CoreException {
 		return project.isOpen()
 				&& project.isNatureEnabled("org.eclipse.jdt.core.javanature");
 	}
 
-	public void analyzeJavaElement(Inputs inputs,
+	private void analyzeJavaElement(Inputs inputs,
 			IgnoreCaseArrayList targetClazz,
 			IgnoreCaseArrayList hitClazzIgnoreCase, IJavaElement javaElement,
 			int type) throws JavaModelException {
@@ -276,6 +274,7 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 	 *
 	 * @see IWorkbenchWindowActionDelegate#selectionChanged
 	 */
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 	}
 
@@ -285,6 +284,7 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 	 *
 	 * @see IWorkbenchWindowActionDelegate#dispose
 	 */
+	@Override
 	public void dispose() {
 	}
 
@@ -294,6 +294,7 @@ public class SearchMethods implements IWorkbenchWindowActionDelegate {
 	 *
 	 * @see IWorkbenchWindowActionDelegate#init
 	 */
+	@Override
 	public void init(IWorkbenchWindow window) {
 		this.window = window;
 	}
