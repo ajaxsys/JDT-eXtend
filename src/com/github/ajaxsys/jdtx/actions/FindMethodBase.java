@@ -129,7 +129,9 @@ abstract class FindMethodBase
         new Thread(new Runnable() {
             @Override
             public void run() {
+                boolean isCancelled = false;
                 long start = System.currentTimeMillis();
+
                 for (int i = 0; i < members.length; i++) {
                     final String member = members[i];
                     final String logPrefix = (i + 1) + SPLITER;
@@ -145,15 +147,18 @@ abstract class FindMethodBase
                     job.doneOne();
 
                     if(!job.isWorking()) {
-                        UConsole.log("[[[ Cancelled at ExcuteTime "
-                                + (System.currentTimeMillis() - start) + " ]]]");
-                        UConsole.close();
+                        isCancelled = true;
                         return;
                     }
-
                 }
-                UConsole.log("[[[ ExcuteTime "
-                        + (System.currentTimeMillis() - start) + " ]]]");
+
+                if (isCancelled) {
+                    UConsole.log("[[[ Cancelled at ExcuteTime "
+                            + (System.currentTimeMillis() - start) + " ]]]");
+                } else {
+                    UConsole.log("[[[ ExcuteTime "
+                            + (System.currentTimeMillis() - start) + " ]]]");
+                }
                 UConsole.close();
             }
 
@@ -197,25 +202,27 @@ abstract class FindMethodBase
         new Thread(new Runnable() {
             @Override
             public void run() {
+                boolean isCancelled = false;
                 // Waiting for ExecutorService end
                 exec.shutdown();
                 try {
                     while(!exec.awaitTermination(200, TimeUnit.MILLISECONDS)) {
                         if (!job.isWorking()) {
-                            UConsole.log("[[[ Cancelled at ExcuteTime "
-                                    + (System.currentTimeMillis() - start) + " ]]]");
                             exec.shutdownNow();
+                            isCancelled = true;
                             break;
                         }
-                        // System.out.println("[[[ ExcuteTime " +
-                        // (System.currentTimeMillis() -
-                        // start) + " ]]]");
-                        UConsole.log("[[[ ExcuteTime "
-                                + (System.currentTimeMillis() - start) + " ]]]");
                     }
                 } catch (InterruptedException e) {
                 }
 
+                if (isCancelled) {
+                    UConsole.log("[[[ Cancelled at ExcuteTime "
+                            + (System.currentTimeMillis() - start) + " ]]]");
+                } else {
+                    UConsole.log("[[[ ExcuteTime "
+                            + (System.currentTimeMillis() - start) + " ]]]");
+                }
                 UConsole.close();
 
                 job.stopForce(); // Just for worry about accident
