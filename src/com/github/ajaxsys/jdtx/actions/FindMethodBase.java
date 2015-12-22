@@ -13,6 +13,7 @@ import org.eclipse.ui.IWorkbenchWindow;
 import org.eclipse.ui.IWorkbenchWindowActionDelegate;
 
 import com.github.ajaxsys.jdtx.dialog.QualifiedNameDialog;
+import com.github.ajaxsys.jdtx.utils.ProgressMonitorJob;
 import com.github.ajaxsys.jdtx.utils.UCaller;
 import com.github.ajaxsys.jdtx.utils.UConsole;
 import com.github.ajaxsys.jdtx.utils.UDialog;
@@ -26,31 +27,34 @@ import com.github.ajaxsys.jdtx.utils.UFile;
  *
  * @see IWorkbenchWindowActionDelegate
  */
-abstract class FindMethodBase implements IWorkbenchWindowActionDelegate {
-    final String SPLITER = "*";
+abstract class FindMethodBase
+    implements
+        IWorkbenchWindowActionDelegate {
+
+    final String SPLITER = "\t";
 
     boolean isRecursive = true;
-	boolean isMultiThread = true;
+    boolean isMultiThread = true;
 
-	private IWorkbenchWindow window;
+    private IWorkbenchWindow window;
 
-	abstract String getText() throws Exception;
+    abstract String getText() throws Exception;
 
-	String getTextFromFile() throws FileNotFoundException {
-	    boolean isContinued = UDialog.showUsage(this, window);
+    String getTextFromFile() throws FileNotFoundException {
+        boolean isContinued = UDialog.showUsage(this, window);
         if (!isContinued){
             return null;
         }
 
-	    String inPath = UFile.getJDTExtendHome("list.txt");
-	    return UFile.getText(inPath);
-	}
+        String inPath = UFile.getJDTExtendHome("list.txt");
+        return UFile.getText(inPath);
+    }
 
     String getTextFromDialog() {
         QualifiedNameDialog dialog = new QualifiedNameDialog(window.getShell());
         dialog.create();
         if (dialog.open() == Window.OK) {
-          System.out.println(dialog.getQualifiedNames());
+          //System.out.println(dialog.getQualifiedNames());
 
           if (dialog.getQualifiedNames().length() > 0 ) {
               return dialog.getQualifiedNames();
@@ -59,177 +63,210 @@ abstract class FindMethodBase implements IWorkbenchWindowActionDelegate {
         return null;
     }
 
-	/**
-	 * The action has been activated. The argument of the method represents the
-	 * 'real' action sitting in the workbench UI.
-	 *
-	 * @see IWorkbenchWindowActionDelegate#run
-	 */
+    /**
+     * The action has been activated. The argument of the method represents the
+     * 'real' action sitting in the workbench UI.
+     *
+     * @see IWorkbenchWindowActionDelegate#run
+     */
     @Override
-	public void run(IAction action) {
+    public void run(IAction action) {
 
-		try {
-		    UConsole.init(UFile.getJDTExtendHome("result.txt"));
+        try {
+            UConsole.init(UFile.getJDTExtendHome("result.txt"));
 
-			String inputText = null;
-			try {
-				// * Input sample of list.txt:
-				// myjdtplugin.utils.UCaller.equals(String[], String[])
-				// myjdtplugin.utils.UCaller.getCallersOf(IMember)
-				// myjdtplugin.utils.UCaller.TAB
-				// myjdtplugin.utils.UCaller
-				// myjdtplugin.utils.UClass.UClass()
-				// myjdtplugin.utils.UCaller.NOT_EXIST
-				inputText = getText();
+            String inputText = null;
+            try {
+                // * Input sample of list.txt:
+                // myjdtplugin.utils.UCaller.equals(String[], String[])
+                // myjdtplugin.utils.UCaller.getCallersOf(IMember)
+                // myjdtplugin.utils.UCaller.TAB
+                // myjdtplugin.utils.UCaller
+                // myjdtplugin.utils.UClass.UClass()
+                // myjdtplugin.utils.UCaller.NOT_EXIST
+                inputText = getText();
 
-				if (inputText == null) {
-				    return;
-				}
+                if (inputText == null) {
+                    return;
+                }
 
-				inputText.replaceAll("\r", "");
+                inputText.replaceAll("\r", "");
 
-			} catch (FileNotFoundException e) {
-				System.out.println("[ERROR] File read NG: " + e.getMessage());
-				return;
-			}
+            } catch (FileNotFoundException e) {
+                System.out.println("[ERROR] File read NG: " + e.getMessage());
+                return;
+            }
 
-			// EXECUTE
-			if (isMultiThread) {
-				runMultiThread(action, inputText);
-			} else {
-				runSingleThread(action, inputText);
-			}
+            final String[] members = inputText.split("\n");
 
-		} catch (IOException e) {
-			e.printStackTrace();
-			UConsole.log("[FATAL] " + e.getMessage() + " - " + UFile.getJDTExtendHome("list.txt OR result.txt"));
-		}  catch (Exception e) {
-			e.printStackTrace();
-			UConsole.log("[FATAL]" + e.getMessage());
-		}
-	}
+            final ProgressMonitorJob job = new ProgressMonitorJob(
+                members.length);
+            job.schedule();
 
-	void runSingleThread(IAction action, String inputText) {
-		UConsole.log("[[[ Start@Single Thread..... ]]]");
+            // EXECUTE
+            if (isMultiThread) {
+                runMultiThread(action, members, job);
+            } else {
+                runSingleThread(action, members, job);
+            }
 
-		final String[] members = inputText.split("\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+            UConsole.log("[FATAL] " + e.getMessage() + " - " + UFile.getJDTExtendHome("list.txt OR result.txt"));
+        }  catch (Exception e) {
+            e.printStackTrace();
+            UConsole.log("[FATAL]" + e.getMessage());
+        }
+    }
 
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				long start = System.currentTimeMillis();
-				for (int i = 0; i < members.length; i++) {
-					final String member = members[i];
-					final String logPrefix = (i + 1) + SPLITER;
+    void runSingleThread(
+        IAction action,
+        final String[] members,
+        final ProgressMonitorJob job) {
 
-					// Skip blank line
-					if ("".equals(member.trim()))
-						continue;
+        UConsole.log("[[[ Start@Single Thread..... ]]]");
 
-					new UCaller().callHierachyOfWorkspaceProject(member,
-							logPrefix, isRecursive);
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                long start = System.currentTimeMillis();
+                for (int i = 0; i < members.length; i++) {
+                    final String member = members[i];
+                    final String logPrefix = (i + 1) + SPLITER;
 
-				}
-				UConsole.log("[[[ ExcuteTime "
-						+ (System.currentTimeMillis() - start) + " ]]]");
-				UConsole.close();
-			}
+                    // Skip blank line
+                    if ("".equals(member.trim())) {
+                        job.doneOne();
+                        continue;
+                    }
 
-		}).start();
+                    new UCaller().callHierachyOfWorkspaceProject(member,
+                            logPrefix, isRecursive);
+                    job.doneOne();
 
-	}
+                    if(!job.isWorking()) {
+                        UConsole.log("[[[ Cancelled at ExcuteTime "
+                                + (System.currentTimeMillis() - start) + " ]]]");
+                        UConsole.close();
+                        return;
+                    }
 
-	void runMultiThread(IAction action, String inputText) {
-		UConsole.log("[[[ Start@Multi Thread..... ]]]");
+                }
+                UConsole.log("[[[ ExcuteTime "
+                        + (System.currentTimeMillis() - start) + " ]]]");
+                UConsole.close();
+            }
 
-		final long start = System.currentTimeMillis();
+        }).start();
 
-		// Keep a processor for OS
-		final ExecutorService exec = Executors.newFixedThreadPool(Runtime
-				.getRuntime().availableProcessors() - 1);
+    }
 
-		String[] members = inputText.split("\n");
-		for (int i = 0; i < members.length; i++) {
-			final String member = members[i];
-			final String logPrefix = (i + 1) + SPLITER;
-			// Skip blank line
-			if ("".equals(member.trim()))
-				continue;
+    void runMultiThread(
+        IAction action,
+        String[] members,
+        final ProgressMonitorJob job) {
 
-			exec.execute(new Runnable() {
-				@Override
-				public void run() {
-					new UCaller().callHierachyOfWorkspaceProject(member,
-							logPrefix, isRecursive);
-				}
-			});
-		}
+        UConsole.log("[[[ Start@Multi Thread..... ]]]");
 
-		// Not block the UI Thread
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				// Waiting for ExecutorService end
-				exec.shutdown();
-				try {
-					exec.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-				} catch (InterruptedException e) {
-				}
+        final long start = System.currentTimeMillis();
 
-				// System.out.println("[[[ ExcuteTime " +
-				// (System.currentTimeMillis() -
-				// start) + " ]]]");
-				UConsole.log("[[[ ExcuteTime "
-						+ (System.currentTimeMillis() - start) + " ]]]");
-				UConsole.close();
-			}
-		}).start();
-	}
+        // Keep a processor for OS
+        final ExecutorService exec = Executors.newFixedThreadPool(Runtime
+                .getRuntime().availableProcessors() - 1);
 
-	public void runSample() {
-		final String clazz = "com.test.example.pkg.MyIF";
-		final String method = "query";
-		try {
-			System.out.println("searchMethodAllIncludeJRE----------------------------------------------------");
-			new UCaller().searchMethodAllIncludeJRE(clazz, method);
+        for (int i = 0; i < members.length; i++) {
+            final String member = members[i];
+            final String logPrefix = (i + 1) + SPLITER;
+            // Skip blank line
+            if ("".equals(member.trim())) {
+                job.doneOne();
+                continue;
+            }
 
-			System.out.println("searchMethodWithWorkspaceProjectOnly----------------------------------------------------");
-			new UCaller().searchMethodWithWorkspaceProjectOnly(clazz, method);
+            exec.execute(new Runnable() {
+                @Override
+                public void run() {
+                    new UCaller().callHierachyOfWorkspaceProject(member,
+                            logPrefix, isRecursive);
+                    job.doneOne();
+                }
+            });
+        }
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+        // Not block the UI Thread
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // Waiting for ExecutorService end
+                exec.shutdown();
+                try {
+                    while(!exec.awaitTermination(200, TimeUnit.MILLISECONDS)) {
+                        if (!job.isWorking()) {
+                            UConsole.log("[[[ Cancelled at ExcuteTime "
+                                    + (System.currentTimeMillis() - start) + " ]]]");
+                            exec.shutdownNow();
+                            break;
+                        }
+                        // System.out.println("[[[ ExcuteTime " +
+                        // (System.currentTimeMillis() -
+                        // start) + " ]]]");
+                        UConsole.log("[[[ ExcuteTime "
+                                + (System.currentTimeMillis() - start) + " ]]]");
+                    }
+                } catch (InterruptedException e) {
+                }
 
-	/**
-	 * Selection in the workbench has been changed. We can change the state of
-	 * the 'real' action here if we want, but this can only happen after the
-	 * delegate has been created.
-	 *
-	 * @see IWorkbenchWindowActionDelegate#selectionChanged
-	 */
-	@Override
-	public void selectionChanged(IAction action, ISelection selection) {
-	}
+                UConsole.close();
 
-	/**
-	 * We can use this method to dispose of any system resources we previously
-	 * allocated.
-	 *
-	 * @see IWorkbenchWindowActionDelegate#dispose
-	 */
-	@Override
-	public void dispose() {
-	}
+                job.stopForce(); // Just for worry about accident
+            }
+        }).start();
+    }
 
-	/**
-	 * We will cache window object in order to be able to provide parent shell
-	 * for the message dialog.
-	 *
-	 * @see IWorkbenchWindowActionDelegate#init
-	 */
-	@Override
-	public void init(IWorkbenchWindow window) {
-		this.window = window;
-	}
+    public void runSample() {
+        final String clazz = "com.test.example.pkg.MyIF";
+        final String method = "query";
+        try {
+            System.out.println("searchMethodAllIncludeJRE----------------------------------------------------");
+            new UCaller().searchMethodAllIncludeJRE(clazz, method);
+
+            System.out.println("searchMethodWithWorkspaceProjectOnly----------------------------------------------------");
+            new UCaller().searchMethodWithWorkspaceProjectOnly(clazz, method);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Selection in the workbench has been changed. We can change the state of
+     * the 'real' action here if we want, but this can only happen after the
+     * delegate has been created.
+     *
+     * @see IWorkbenchWindowActionDelegate#selectionChanged
+     */
+    @Override
+    public void selectionChanged(IAction action, ISelection selection) {
+    }
+
+    /**
+     * We can use this method to dispose of any system resources we previously
+     * allocated.
+     *
+     * @see IWorkbenchWindowActionDelegate#dispose
+     */
+    @Override
+    public void dispose() {
+    }
+
+    /**
+     * We will cache window object in order to be able to provide parent shell
+     * for the message dialog.
+     *
+     * @see IWorkbenchWindowActionDelegate#init
+     */
+    @Override
+    public void init(IWorkbenchWindow window) {
+        this.window = window;
+    }
 }

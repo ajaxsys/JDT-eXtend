@@ -5,6 +5,11 @@ package com.github.ajaxsys.jdtx.actions;
  */
 public class FindMethodCallersSingleThread extends FindMethodCallers {
     public FindMethodCallersSingleThread() {
-    	super.isMultiThread = false;
+        super.isMultiThread = false;
+    }
+
+    @Override
+    String getText() {
+        return super.getTextFromDialog();
     }
 }

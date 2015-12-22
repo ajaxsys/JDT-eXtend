@@ -38,6 +38,14 @@
                id="com.github.ajaxsys.jdtx.actions.FindMethodCallersNoRecursiveFromTextInput">
          </action>
 
+          <!--Disable single thread version. action
+               label="&amp;Check Call Hierrarchy TextBox Single"
+               icon="icons/ch2.png"
+               class="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThread"
+               menubarPath="JDTExtendMenu/checkGroup"
+               id="com.github.ajaxsys.jdtx.actions.FindMethodCallersSingleThread">
+         </action-->
+
          <action
                label="&amp;Get Call Hierrarchy"
                icon="icons/ch.png"
@@ -61,15 +69,6 @@
                menubarPath="JDTExtendMenu/qualifiedNameGroup"
                id="com.github.ajaxsys.jdtx.actions.SearchMethods">
          </action>
-         <!-- Toolbar
-         <action
-               label="&amp;呼出階層参照"
-               icon="icons/ch.png"
-               class="com.github.ajaxsys.jdtx.actions.FindMethodCallers"
-               tooltip="Find all callers of a method – get all methods that call a particular method "
-               toolbarPath="sampleGroup4"
-               id="com.github.ajaxsys.jdtx.actions.FindMethodCallers">
-         </action>-->
 
       </actionSet>
    </extension>

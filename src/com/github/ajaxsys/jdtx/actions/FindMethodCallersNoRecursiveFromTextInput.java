@@ -6,7 +6,7 @@ package com.github.ajaxsys.jdtx.actions;
  */
 public class FindMethodCallersNoRecursiveFromTextInput extends FindMethodCallers {
     public FindMethodCallersNoRecursiveFromTextInput() {
-    	super.isRecursive = false;
+        super.isRecursive = false;
     }
 
     @Override
